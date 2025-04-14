@@ -1,119 +1,135 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>USDT Payment Confirmation</title>
   <style>
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #f1f5f9;
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+      margin: 0;
+      padding: 0;
       display: flex;
       justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
+      align-items: flex-start;
+      min-height: 100vh;
     }
 
-    .card {
-      background: white;
-      padding: 2rem 2.5rem;
-      border-radius: 12px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-      max-width: 450px;
+    .container {
+      background-color: #fff;
+      padding: 30px;
+      margin-top: 50px;
+      border-radius: 8px;
+      max-width: 600px;
       width: 100%;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
 
-    .card h2 {
-      margin-bottom: 1.5rem;
+    h2 {
       text-align: center;
-      color: #111827;
+      margin-bottom: 25px;
     }
 
-    label {
-      display: block;
-      margin: 0.5rem 0 0.25rem;
-      font-weight: 500;
-      color: #374151;
-    }
-
-    input {
-      width: 100%;
-      padding: 0.6rem;
-      margin-bottom: 1rem;
-      border: 1px solid #d1d5db;
+    .instructions {
+      font-size: 14px;
+      background-color: #e9f7fd;
+      padding: 15px;
       border-radius: 6px;
-      font-size: 1rem;
-      transition: border 0.2s ease;
+      margin-bottom: 20px;
+      line-height: 1.6;
     }
 
-    input:focus {
-      outline: none;
-      border-color: #6366f1;
+    .label {
+      margin-top: 10px;
+      display: block;
+      font-weight: bold;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
     }
 
     button {
-      background: #4f46e5;
-      color: white;
-      border: none;
-      padding: 0.75rem;
       width: 100%;
+      padding: 12px;
+      background-color: #007bff;
+      color: #fff;
+      font-size: 16px;
+      border: none;
       border-radius: 6px;
-      font-size: 1rem;
-      font-weight: 600;
+      margin-top: 20px;
       cursor: pointer;
-      transition: background 0.2s ease;
     }
 
     button:hover {
-      background: #4338ca;
+      background-color: #0056b3;
     }
 
-    .response {
-      margin-top: 1rem;
-      padding: 1rem;
+    .qr {
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    .result {
+      margin-top: 20px;
+      padding: 10px;
       border-radius: 6px;
-      font-size: 0.95rem;
+      background-color: #f1f1f1;
+      word-wrap: break-word;
     }
 
-    .response.success {
-      background-color: #dcfce7;
-      color: #166534;
-    }
-
-    .response.error {
-      background-color: #fee2e2;
-      color: #991b1b;
+    .address {
+      font-weight: bold;
+      text-align: center;
+      margin-top: 10px;
+      color: #dc3545;
     }
   </style>
 </head>
 <body>
-  <div class="card">
+  <div class="container">
     <h2>USDT Payment Confirmation</h2>
-    <label for="username">Username:</label>
-    <input type="text" id="username" placeholder="e.g. rajat123" />
 
-    <label for="txhash">Transaction Hash:</label>
-    <input type="text" id="txhash" placeholder="0x..." />
+    <div class="instructions">
+      <strong>Payment Instructions:</strong><br />
+      1. Select network: <strong>BEP20 (BSC)</strong><br />
+      2. Send <strong>USDT</strong> to the wallet address below<br />
+      3. Enter your <strong>TxID</strong> and <strong>username</strong><br />
+      4. Click <strong>"Confirm My Payment"</strong> to verify your payment
+    </div>
 
-    <button onclick="submit()">Confirm Payment</button>
-    <div id="response" class="response" style="display: none;"></div>
+    <div class="qr">
+      <img src="https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl=0x6C7723E803A2F625E9b845b4EBfd14f99be5ce22" alt="QR Code" />
+    </div>
+
+    <div class="address">
+      BEP20 Wallet Address:<br />
+      0x6C7723E803A2F625E9b845b4EBfd14f99be5ce22
+    </div>
+
+    <label class="label">Transaction Hash (TxID):</label>
+    <input type="text" id="txhash" placeholder="Enter your TxID"/>
+
+    <label class="label">Your Username:</label>
+    <input type="text" id="username" placeholder="Enter your SMMCloud Username"/>
+
+    <button onclick="confirmPayment()">💳 I Confirm My Payment</button>
+
+    <div id="result" class="result" style="display:none;"></div>
   </div>
 
   <script>
-    async function submit() {
-      const username = document.getElementById("username").value.trim();
+    async function confirmPayment() {
       const txhash = document.getElementById("txhash").value.trim();
-      const responseBox = document.getElementById("response");
-
-      responseBox.style.display = "none";
-      responseBox.className = "response";
-
-      if (!username || !txhash) {
-        responseBox.innerText = "Please enter both username and transaction hash.";
-        responseBox.classList.add("error");
-        responseBox.style.display = "block";
-        return;
-      }
+      const username = document.getElementById("username").value.trim();
+      const result = document.getElementById("result");
+      result.style.display = "block";
+      result.innerText = "⏳ Processing...";
 
       try {
         const res = await fetch("https://usdt-auto-api-production.up.railway.app/confirm", {
@@ -123,14 +139,16 @@
         });
 
         const data = await res.json();
-
-        responseBox.innerText = data.message || data.error || "Unknown response";
-        responseBox.classList.add(res.ok ? "success" : "error");
-        responseBox.style.display = "block";
+        if (res.ok) {
+          result.style.backgroundColor = "#d4edda";
+          result.innerText = `✅ ${data.message}`;
+        } else {
+          result.style.backgroundColor = "#f8d7da";
+          result.innerText = `⚠️ ${data.error}`;
+        }
       } catch (err) {
-        responseBox.innerText = "Something went wrong. Please try again.";
-        responseBox.classList.add("error");
-        responseBox.style.display = "block";
+        result.style.backgroundColor = "#f8d7da";
+        result.innerText = `❌ ${err.message}`;
       }
     }
   </script>
