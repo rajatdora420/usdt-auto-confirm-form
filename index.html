@@ -107,16 +107,23 @@
       <img src="https://i.ibb.co/xKvwCVCn/image.png" alt="QR Code" width="200" />
     </div>
 
-    <div style="margin-top: 20px;">
-  <label style="font-weight: bold;">BEP20 Address:</label>
-  <div style="display: flex; align-items: center; gap: 10px;">
-    <input type="text" id="walletAddress" value="0x6C7723E803A2F625E9b845b4EBfd14f99be5ce22" readonly style="padding: 8px; width: 100%; max-width: 480px; font-size: 14px;" />
-    <button onclick="copyAddress()" style="padding: 8px 12px; background-color: #007bff; color: white; border: none; cursor: pointer; border-radius: 4px;">
-      📋 Copy
-    </button>
-  </div>
-  <span id="copyStatus" style="color: green; font-size: 13px; display: none;">✅ Copied!</span>
-</div>
+   <p style="margin-top: 10px; font-weight: bold;">BEP20 Address:</p>
+<p id="walletText" style="color: #e91e63; cursor: pointer; user-select: all;" onclick="copyAddressText()">
+  0x6C7723E803A2F625E9b845b4EBfd14f99be5ce22
+</p>
+<span id="copyStatus" style="color: green; font-size: 13px; display: none;">✅ Copied!</span>
+
+<script>
+  function copyAddressText() {
+    const text = document.getElementById("walletText").innerText;
+    navigator.clipboard.writeText(text).then(() => {
+      const status = document.getElementById("copyStatus");
+      status.style.display = "inline";
+      setTimeout(() => { status.style.display = "none"; }, 2000);
+    });
+  }
+</script>
+
 
 <script>
   function copyAddress() {
