@@ -1,45 +1,130 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>USDT Auto Confirm</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>USDT Payment Confirmation</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f3f4f6;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .card {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      max-width: 420px;
+      width: 100%;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 1rem;
+      color: #1f2937;
+    }
+    label {
+      font-weight: 600;
+      display: block;
+      margin-top: 1rem;
+      color: #374151;
+    }
+    input {
+      width: 100%;
+      padding: 0.6rem;
+      margin-top: 0.3rem;
+      border-radius: 6px;
+      border: 1px solid #d1d5db;
+      font-size: 1rem;
+    }
+    button {
+      margin-top: 1.5rem;
+      padding: 0.8rem;
+      width: 100%;
+      background-color: #10b981;
+      color: white;
+      font-weight: bold;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #059669;
+    }
+    .result {
+      margin-top: 1rem;
+      padding: 1rem;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      white-space: pre-wrap;
+    }
+    .success {
+      background-color: #ecfdf5;
+      color: #065f46;
+      border: 1px solid #10b981;
+    }
+    .error {
+      background-color: #fef2f2;
+      color: #991b1b;
+      border: 1px solid #ef4444;
+    }
+  </style>
 </head>
 <body>
-  <h2>USDT Payment Confirmation</h2>
-  <form id="confirmForm">
+  <div class="card">
+    <h1>USDT Payment Confirmation</h1>
     <label>Username:</label>
-    <input type="text" id="username" required><br><br>
-    <label>Transaction Hash:</label>
-    <input type="text" id="txhash" required><br><br>
-    <button type="submit">Confirm Payment</button>
-  </form>
+    <input type="text" id="username" placeholder="Enter your username" />
 
-  <pre id="result"></pre>
+    <label>Transaction Hash:</label>
+    <input type="text" id="txhash" placeholder="Paste your transaction hash" />
+
+    <button onclick="confirmPayment()">Confirm Payment</button>
+
+    <div id="result" class="result" style="display: none;"></div>
+  </div>
 
   <script>
-  const form = document.getElementById("confirmForm");
-  const result = document.getElementById("result");
+    async function confirmPayment() {
+      const username = document.getElementById("username").value.trim();
+      const txhash = document.getElementById("txhash").value.trim();
+      const resultDiv = document.getElementById("result");
+      resultDiv.style.display = 'none';
+      resultDiv.textContent = '';
+      resultDiv.className = 'result';
 
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
+      if (!username || !txhash) {
+        resultDiv.textContent = '⚠️ Please enter both fields.';
+        resultDiv.classList.add('error');
+        resultDiv.style.display = 'block';
+        return;
+      }
 
-    const username = document.getElementById("username").value;
-    const txhash = document.getElementById("txhash").value;
+      try {
+        const res = await fetch("https://usdt-auto-api-production.up.railway.app/confirm", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ username, txhash })
+        });
 
-    result.innerText = "⏳ Sending request...";
-
-    try {
-      const res = await fetch("https://usdt-auto-api-production.up.railway.app/confirm", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, txhash })
-      });
-
-      const data = await res.json();
-      result.innerText = JSON.stringify(data, null, 2);
-    } catch (err) {
-      result.innerText = "❌ Error: " + err.message;
+        const data = await res.json();
+        resultDiv.classList.add(res.ok ? 'success' : 'error');
+        resultDiv.textContent = res.ok ? `✅ ${data.message}` : `⚠️ ${data.error}`;
+        resultDiv.style.display = 'block';
+      } catch (err) {
+        resultDiv.classList.add('error');
+        resultDiv.textContent = '❌ Something went wrong. Please try again.';
+        resultDiv.style.display = 'block';
+      }
     }
-  });
-</script>
+  </script>
 </body>
 </html>
