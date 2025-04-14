@@ -16,15 +16,18 @@
   <pre id="result"></pre>
 
   <script>
-    const form = document.getElementById("confirmForm");
-    const result = document.getElementById("result");
+  const form = document.getElementById("confirmForm");
+  const result = document.getElementById("result");
 
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-      const username = document.getElementById("username").value;
-      const txhash = document.getElementById("txhash").value;
+    const username = document.getElementById("username").value;
+    const txhash = document.getElementById("txhash").value;
 
+    result.innerText = "⏳ Sending request...";
+
+    try {
       const res = await fetch("https://usdt-auto-api-production.up.railway.app/confirm", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -33,7 +36,10 @@
 
       const data = await res.json();
       result.innerText = JSON.stringify(data, null, 2);
-    });
-  </script>
+    } catch (err) {
+      result.innerText = "❌ Error: " + err.message;
+    }
+  });
+</script>
 </body>
 </html>
