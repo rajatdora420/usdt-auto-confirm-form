@@ -2,12 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>JingleSMM USDT Payment</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JingleSMM USDT Payment Confirmation</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background-color: #f8f9fa;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #0f172a;
+      color: #f8fafc;
       margin: 0;
       padding: 0;
       display: flex;
@@ -15,148 +16,134 @@
       align-items: flex-start;
       min-height: 100vh;
     }
-
     .container {
-      background-color: #fff;
+      background-color: #1e293b;
       padding: 30px;
       margin-top: 50px;
-      border-radius: 8px;
-      max-width: 600px;
+      border-radius: 10px;
+      max-width: 480px;
       width: 100%;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
     }
-
     h2 {
       text-align: center;
       margin-bottom: 25px;
+      color: #38bdf8;
     }
-
-    .instructions {
-      font-size: 14px;
-      background-color: #e9f7fd;
-      padding: 15px;
-      border-radius: 6px;
-      margin-bottom: 20px;
-      line-height: 1.6;
-    }
-
-    .label {
-      margin-top: 10px;
+    label {
       display: block;
+      margin-top: 15px;
+      margin-bottom: 5px;
       font-weight: bold;
     }
-
-    input, select {
+    input {
       width: 100%;
       padding: 10px;
-      margin-top: 5px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
+      border-radius: 6px;
+      border: none;
+      background: #334155;
+      color: #f8fafc;
+      font-size: 15px;
     }
-
     button {
       width: 100%;
       padding: 12px;
-      background-color: #007bff;
-      color: #fff;
+      background-color: #38bdf8;
+      color: #0f172a;
       font-size: 16px;
+      font-weight: bold;
       border: none;
-      border-radius: 6px;
-      margin-top: 20px;
+      border-radius: 8px;
+      margin-top: 25px;
       cursor: pointer;
+      transition: background-color 0.3s ease;
     }
-
     button:hover {
-      background-color: #0056b3;
+      background-color: #0ea5e9;
     }
-
     .qr {
       text-align: center;
       margin: 20px 0;
     }
-
-    .result {
-      margin-top: 20px;
-      padding: 10px;
-      border-radius: 6px;
-      background-color: #f1f1f1;
-      word-wrap: break-word;
-    }
-
     .address {
-      font-weight: bold;
       text-align: center;
-      margin-top: 10px;
-      color: #dc3545;
+      margin-bottom: 20px;
+      font-weight: bold;
+      color: #facc15;
+      cursor: pointer;
+      user-select: all;
+    }
+    .status {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 8px;
+      font-weight: bold;
+      display: none;
+    }
+    .loading {
+      background-color: #facc15;
+      color: #0f172a;
+    }
+    .success {
+      background-color: #4ade80;
+      color: #0f172a;
+    }
+    .error {
+      background-color: #f87171;
+      color: #fff;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h2>JingleSMM USDT Payment</h2>
-
-    <div class="instructions">
-      <strong>Payment Instructions:</strong><br />
-      1. Select network: <strong>BEP20 (BSC)</strong><br />
-      2. Send <strong>USDT</strong> to the wallet address below<br />
-      3. Enter your <strong>TxID</strong> and <strong>username</strong><br />
-      4. Click <strong>"Confirm Payment"</strong> to verify your payment
-    </div>
+    <h2>USDT BEP20 Auto Confirmation</h2>
 
     <div class="qr">
-      <img src="https://i.ibb.co/xKvwCVCn/image.png" alt="QR Code" width="200" />
+      <img src="https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl=0x6C7723E803A2F625E9b845b4EBfd14f99be5ce22" alt="QR Code" />
     </div>
 
-   <p style="margin-top: 10px; font-weight: bold;">BEP20 Address:</p>
-<p id="walletText" style="color: #e91e63; cursor: pointer; user-select: all;" onclick="copyAddressText()">
-  0x6C7723E803A2F625E9b845b4EBfd14f99be5ce22
-</p>
-<span id="copyStatus" style="color: green; font-size: 13px; display: none;">✅ Copied!</span>
+    <div class="address" onclick="copyAddress()">
+      Click to Copy Wallet:<br />0x6C7723E803A2F625E9b845b4EBfd14f99be5ce22
+    </div>
 
-<script>
-  function copyAddressText() {
-    const text = document.getElementById("walletText").innerText;
-    navigator.clipboard.writeText(text).then(() => {
-      const status = document.getElementById("copyStatus");
-      status.style.display = "inline";
-      setTimeout(() => { status.style.display = "none"; }, 2000);
-    });
-  }
-</script>
+    <label for="txhash">Transaction Hash (TxID):</label>
+    <input type="text" id="txhash" placeholder="Enter your transaction hash" />
 
+    <label for="username">JingleSMM Username:</label>
+    <input type="text" id="username" placeholder="Enter your SMM panel username" />
 
-<script>
-  function copyAddress() {
-    const addressField = document.getElementById("walletAddress");
-    addressField.select();
-    addressField.setSelectionRange(0, 99999); // For mobile
+    <button onclick="confirmPayment()">🚀 Confirm Payment</button>
 
-    navigator.clipboard.writeText(addressField.value).then(() => {
-      const status = document.getElementById("copyStatus");
-      status.style.display = "inline";
-      setTimeout(() => { status.style.display = "none"; }, 2000);
-    });
-  }
-</script>
-
-    <label class="label">Transaction Hash (TxID):</label>
-    <input type="text" id="txhash" placeholder="Enter your TxID"/>
-
-    <label class="label">Your Username:</label>
-    <input type="text" id="username" placeholder="Enter your JingleSMM Username"/>
-
-    <button onclick="confirmPayment()">Confirm My Payment</button>
-
-    <div id="result" class="result" style="display:none;"></div>
+    <div id="result" class="status"></div>
   </div>
 
   <script>
+    function copyAddress() {
+      const address = "0x6C7723E803A2F625E9b845b4EBfd14f99be5ce22";
+      navigator.clipboard.writeText(address);
+      const addressDiv = document.querySelector(".address");
+      const original = addressDiv.innerHTML;
+      addressDiv.innerHTML = "✅ Copied!";
+      setTimeout(() => {
+        addressDiv.innerHTML = original;
+      }, 2000);
+    }
+
     async function confirmPayment() {
       const txhash = document.getElementById("txhash").value.trim();
       const username = document.getElementById("username").value.trim();
       const result = document.getElementById("result");
+
+      if (!txhash || !username) {
+        result.style.display = "block";
+        result.className = "status error";
+        result.innerText = "❌ Please enter both username and transaction hash.";
+        return;
+      }
+
       result.style.display = "block";
-      result.innerText = "⏳ Processing...";
+      result.className = "status loading";
+      result.innerText = "⏳ Verifying transaction...";
 
       try {
         const res = await fetch("https://usdt-auto-api-production.up.railway.app/confirm", {
@@ -167,15 +154,15 @@
 
         const data = await res.json();
         if (res.ok) {
-          result.style.backgroundColor = "#d4edda";
+          result.className = "status success";
           result.innerText = `✅ ${data.message}`;
         } else {
-          result.style.backgroundColor = "#f8d7da";
-          result.innerText = `⚠️ ${data.error}`;
+          result.className = "status error";
+          result.innerText = `❌ ${data.error}`;
         }
       } catch (err) {
-        result.style.backgroundColor = "#f8d7da";
-        result.innerText = `❌ ${err.message}`;
+        result.className = "status error";
+        result.innerText = `❌ Network error: ${err.message}`;
       }
     }
   </script>
