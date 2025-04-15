@@ -37,15 +37,41 @@
       text-align: center;
       margin: 20px 0;
     }
-    .address {
-      background: #333;
-      color: #facc15;
+    .qr img {
+      border-radius: 8px;
+      border: 2px solid #334155;
+    }
+    .copy-box {
+      background-color: #1f2937;
+      padding: 15px;
       text-align: center;
-      padding: 10px;
-      border-radius: 5px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      box-shadow: inset 0 0 0 1px #334155;
+    }
+    .copy-box code {
+      color: #facc15;
+      font-size: 14px;
+      word-break: break-all;
+    }
+    .copy-box button {
+      margin-top: 10px;
+      background-color: #f97316;
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      font-size: 14px;
       font-weight: bold;
+      border-radius: 6px;
       cursor: pointer;
-      user-select: all;
+    }
+    .copy-box button:hover {
+      background-color: #fb923c;
+    }
+    .wallet-label {
+      font-weight: bold;
+      color: #fff;
+      margin-bottom: 5px;
     }
     label {
       margin-top: 15px;
@@ -61,7 +87,7 @@
       background-color: #2a2a2a;
       color: #fff;
     }
-    button {
+    button.submit-btn {
       margin-top: 20px;
       width: 100%;
       padding: 12px;
@@ -73,7 +99,7 @@
       border-radius: 5px;
       cursor: pointer;
     }
-    button:hover {
+    button.submit-btn:hover {
       background-color: #fb923c;
     }
     .status {
@@ -115,7 +141,11 @@
       <img src="https://i.ibb.co/xKvwCVCn/image.png" width="180" alt="QR Code">
     </div>
 
-    <div class="address" onclick="copyAddress()">Click to Copy Wallet:<br>0x6C7723E803A2F625E9b845b4EBfd14f99be5ce22</div>
+    <div class="copy-box" onclick="copyAddress()">
+      <span class="wallet-label">Wallet Address (USDT BEP20):</span><br>
+      <code>0x6C7723E803A2F625E9b845b4EBfd14f99be5ce22</code><br>
+      <button id="copyBtn">📋 Click to Copy</button>
+    </div>
 
     <label for="txhash">Transaction Hash (TxID)</label>
     <input type="text" id="txhash" placeholder="Enter your transaction hash">
@@ -123,7 +153,7 @@
     <label for="username">JingleSMM Username</label>
     <input type="text" id="username" placeholder="Enter your SMM panel username">
 
-    <button onclick="confirmPayment()">✅ Confirm My Payment</button>
+    <button class="submit-btn" onclick="confirmPayment()">✅ Confirm My Payment</button>
 
     <div id="result" class="status"></div>
   </div>
@@ -132,10 +162,10 @@
     function copyAddress() {
       const address = "0x6C7723E803A2F625E9b845b4EBfd14f99be5ce22";
       navigator.clipboard.writeText(address);
-      const el = document.querySelector(".address");
-      const original = el.innerHTML;
-      el.innerHTML = "✅ Copied!";
-      setTimeout(() => el.innerHTML = original, 2000);
+      const btn = document.getElementById("copyBtn");
+      const originalText = btn.innerHTML;
+      btn.innerHTML = "✅ Copied!";
+      setTimeout(() => btn.innerHTML = originalText, 2000);
     }
 
     async function confirmPayment() {
