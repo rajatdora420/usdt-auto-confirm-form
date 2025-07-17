@@ -1,24 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JingleSMM Auto USDT</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: black;
+    }
+    #loader {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background-color: #000;
+      color: white;
+      font-size: 18px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 10;
+    }
+    iframe {
+      width: 100vw;
+      height: 100vh;
+      border: none;
+      display: none;
+    }
+  </style>
+</head>
 <body>
-  <div id="loader" style="
-    position: fixed;
-    top: 0; left: 0;
-    width: 100vw; height: 100vh;
-    background-color: #000;
-    color: white;
-    font-size: 18px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 10;
-  ">
-    Loading payment form...
-  </div>
+  <div id="loader">Loading payment form...</div>
 
-  <iframe 
+  <iframe
     id="formFrame"
     src="https://script.google.com/macros/s/AKfycbxAP1ECnNzC7mY2s2vv1RY7xx0PgELxuBhyIrHrnmskqkvUNQuEys_TQcWRYlSaZDLIuQ/exec" 
-    allowfullscreen 
-    style="border: none; width: 100vw; height: 100vh; display: none;"
+    allowfullscreen
     onload="document.getElementById('loader').style.display='none'; this.style.display='block';"
   ></iframe>
 </body>
+</html>
